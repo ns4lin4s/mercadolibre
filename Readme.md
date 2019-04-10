@@ -14,7 +14,7 @@ Para correr el ejemplo debes tener instalado lo siguiente:
 
 * [docker-compose](https://docs.docker.com/compose/install/)
 
-## tl;dr - Para correr el ejemplo
+## Para correr el ejemplo
 ```shell
 $ docker-compose up
 $ open http://localhost:3000/
