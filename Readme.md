@@ -4,7 +4,7 @@
 * [react-engine - 4.x](https://github.com/paypal/react-engine) motor de vistas
 * [react - 16.x](https://github.com/facebook/react) client side para construir el UI
 * [react-router](https://github.com/rackt/react-router) routing client side
-* [webpack](https://github.com/webpack/webpack) 
+* [webpack](https://github.com/webpack/webpack) realiza la minificación del código entre otras cosas..
 * [babel](https://github.com/babel/babel) compila ES6/JSX code
 * [mongodb](https://docs.mongodb.com) base de datos nosql
 
@@ -19,4 +19,6 @@ Para correr el ejemplo debes tener instalado lo siguiente:
 $ docker-compose up
 $ open http://localhost:3000/
 ```
+## Screenshot
 
+![dashboard](https://github.com/ns4lin4s/bike-trail/blob/master/screenshot/screen_dashboard.png)
