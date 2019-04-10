@@ -19,4 +19,6 @@ Para correr el ejemplo debes tener instalado lo siguiente:
 $ docker-compose up
 $ open http://localhost:3000/
 ```
+## Screenshot
 
+![dashboard](https://github.com/ns4lin4s/bike-trail/blob/master/screenshot/screen_dashboard.png)
