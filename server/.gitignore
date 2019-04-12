@@ -1,1 +1,8 @@
 node_modules
+public/*.bundle.*
+public/bundle.*
+public/bundle.*.*
+public/bundle.js
+public/bundle.js.map
+public/*.js
+public/*.js.map

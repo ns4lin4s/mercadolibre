@@ -66,8 +66,8 @@ export default class StationTable extends React.Component {
         return (
           <BootstrapTable data={ arr } ignoreSinglePage  pagination={true}  options={options}>
             <TableHeaderColumn dataField='id' hidden isKey={ true }>ID</TableHeaderColumn>
-            <TableHeaderColumn width='40' dataField='available_bikes'>Estacionadas</TableHeaderColumn>
-            <TableHeaderColumn width='40' dataField='busy_bikes'>Utilizadas</TableHeaderColumn>
+            <TableHeaderColumn width='40' dataField='available_bikes'>Disponibles</TableHeaderColumn>
+            <TableHeaderColumn width='40' dataField='busy_bikes'>Ocupadas</TableHeaderColumn>
             <TableHeaderColumn width='90' dataField='date'>Última actualización</TableHeaderColumn>
           </BootstrapTable>
         );
@@ -110,7 +110,7 @@ export default class StationTable extends React.Component {
         }
 
           return (
-          <div className="col-xl-7 col-lg-7">
+          
             <div className="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Estaciones</h6>
@@ -136,14 +136,14 @@ export default class StationTable extends React.Component {
                         <TableHeaderColumn hidden isKey dataField='id'></TableHeaderColumn>
                         <TableHeaderColumn width='180'  dataField='name' dataSort>Ordenar</TableHeaderColumn>
                         <TableHeaderColumn width='70' dataField='totalLibres' dataSort>Total Libres</TableHeaderColumn>
-                        <TableHeaderColumn width='80' dataField='totalUsadas' dataSort>Total Usadas</TableHeaderColumn>
+                        <TableHeaderColumn width='80' dataField='totalUsadas' dataSort>Total Ocupadas</TableHeaderColumn>
                         
                     </BootstrapTable>
 
                     </div>
                 </div>
             </div>
-        </div>)
+        )
       }
 
 }

@@ -8,6 +8,7 @@ import PieChartStation from './pieChartStation'
 import Select from 'react-select';
 import moment from 'moment';
 
+
 export default class Dashboard extends React.Component {
 
     constructor(props)
@@ -33,45 +34,74 @@ export default class Dashboard extends React.Component {
           this.state.totalUsadas += element.totalUsadas
         });
 
+        this.buildChart = this.buildChart.bind(this)
+
+        this.handleChange = this.handleChange.bind(this)
+
         //BarChar & LineChart
+        let data = []
         
         for(let i = 1; i <= 60; i++ )
         {
-          this.state.data.push({ name: i.toString(), disponibles: 0, usadas: 0 })
+          data.push({ name: i.toString(), disponibles: 0, ocupadas: 0 })
         }
 
+        this.state.data = data
+        console.log(this.state.data )
+
+        
+    }
+
+    loadGraph(){
+      
+      
+
+      //recorre las estaciones
+      let promise = new Promise((resolve,reject)=> {
+
         this.state.stations.forEach(station => {
-            
-            station.expand.forEach(element => {
-                //hace \d+ (minutos|minuto)
-                
-                let match = moment(element.date).fromNow().match(/hace (\d+|un) (minutos|minuto)/g)
-
-                if(match != null && match.length > 0)
-                {
-                    let minutes_ago = 0
-
-                    if(match[0].match(/\d+/g) != null)
-                        minutes_ago = (60 - parseInt(match[0].match(/\d+/g)[0], 10))
-                    else
-                        minutes_ago = (60 - 1)
-                    
-                    let foundElement = this.state.data.find(element => {
-                        return parseInt(element.name ,10) == minutes_ago 
-                    })
-
-                    if(foundElement != null)
+          //recorre el historial
+          station.expand.forEach(element => {
+              
+              //verifica si contiene la frase: hace x minutos
+              let match = moment(element.date).fromNow().match(/hace (\d+|un) (minutos|minuto)/g)
+  
+              //en el caso de que realice el match entra a este if
+              if(match != null && match.length > 0)
+              {
+                  let minutes_ago = 0
+                  //extrae el numero y lo resta con 60min
+                  if(match[0].match(/\d+/g) != null)
+                      minutes_ago = (60 - parseInt(match[0].match(/\d+/g)[0], 10))
+                  else
+                      minutes_ago = (60 - 1)
+                  
+                  for(let i = 1; i <= 60; i++)
+                  {
+                    if(typeof data[i] !== 'undefined')
                     {
-                        foundElement.disponibles += element.available_bikes
-                        foundElement.usadas += element.busy_bikes
+                      console.log(data[i].name)
+                      debugger
+                      if(parseInt(data[i].name ,10) == minutes_ago)
+                      {
+                        data[i].name = data[i].name
+                        data[i].disponibles += element.available_bikes
+                        data[i].ocupadas += element.busy_bikes
+                      }
                     }
-                }
-                    
-                //console.log(moment(element.date).fromNow())
-            });
-        });
+                  }
+              }
+                  
+              //console.log(moment(element.date).fromNow())
+          });
+        })
 
-        this.handleChange = this.handleChange.bind(this)
+        return resolve(data)
+
+      }) 
+      
+      promise.then((data)=>{console.log(data); }) 
+    
     }
 
     mapStation(stations, history){
@@ -107,10 +137,10 @@ export default class Dashboard extends React.Component {
       })
       .then(response => response.json())
       .then(output => {
+          console.log(output)
           this.setState({ selectedOption });
 
-          let arr = self.mapStation(output.stations,output.stations_history)
-          this.setState({ stations : arr }) 
+          let arr = this.mapStation(output.stations,output.stations_history)
           
           let totalLibres = 0
           let totalUsadas = 0
@@ -120,7 +150,22 @@ export default class Dashboard extends React.Component {
             totalUsadas += element.totalUsadas
           });
 
-          this.setState({totalLibres, totalUsadas})
+          //BarChar & LineChart
+          let data = []
+            
+          for(let i = 1; i <= 60; i++ )
+          {
+            data.push({ name: i.toString(), disponibles: 0, ocupadas: 0 })
+          }
+
+          this.setState({stations:arr, totalLibres, totalUsadas,data},()=>{
+            output.graphs.forEach((e)=>{
+              self.buildChart(e)
+            })
+          })
+
+          
+
       })     
     }
 
@@ -128,7 +173,6 @@ export default class Dashboard extends React.Component {
 
       return (
       <React.Fragment>
-        <Menu></Menu>
 
         <div id="content-wrapper" className="d-flex flex-column">
           <div id="content">
@@ -165,12 +209,21 @@ export default class Dashboard extends React.Component {
               </ul>
             </nav>
             <div className="container-fluid">
+            <div className="row">
+            <div className="col-xl-1 col-lg-1">
+                </div>
+                <div className="col-xl-10 col-lg-120">
               <div class="d-sm-flex align-items-center justify-content-between mb-4">
                   <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
               </div>
-
+              </div>
+              <div className="col-xl-1 col-lg-1">
+                </div>
+                </div>
               <div className="row">
-                <div className="col-xl-12 col-lg-12">
+                <div className="col-xl-1 col-lg-1">
+                </div>
+                <div className="col-xl-10 col-lg-120">
                   <div className="card shadow mb-4">
                     <div className="card-body" >
                         <div style={{width:500 + 'px'}}>
@@ -184,21 +237,30 @@ export default class Dashboard extends React.Component {
                     </div>
                   </div>  
                 </div>
+                <div className="col-xl-1 col-lg-1">
+                </div>
               </div>
                     
               <div className="row">
-                <StationTable 
-                  stations={this.state.stations} 
-                  totalLibres={this.state.totalLibres} 
-                  totalUsadas={this.state.totalUsadas}>
-                </StationTable>
-
+                <div className="col-xl-1 col-lg-1">
+                </div>
                 <div className="col-xl-5 col-lg-5">
                   <LineChartStation data={this.state.data}></LineChartStation>
 
                   <BarChartStation data={this.state.data} ></BarChartStation>
 
                   <PieChartStation totalLibres={this.state.totalLibres} totalUsadas={this.state.totalUsadas}></PieChartStation>
+                  
+                </div>
+
+                <div className="col-xl-5 col-lg-5">
+                  <StationTable 
+                      stations={this.state.stations} 
+                      totalLibres={this.state.totalLibres} 
+                      totalUsadas={this.state.totalUsadas}>
+                    </StationTable>
+                </div>
+                <div className="col-xl-1 col-lg-1">
                 </div>
               </div>
             </div>
@@ -208,5 +270,132 @@ export default class Dashboard extends React.Component {
         
       </React.Fragment>
       )
+    }
+
+    buildChart(element)
+    {
+      //verifica si contiene la frase: hace x minutos
+      let match = moment(element.date).fromNow().match(/hace (\d+|un) (minutos|minuto)/g)
+  
+      //en el caso de que realice el match entra a este if
+      if(match != null && match.length > 0)
+      {
+          let minutes_ago = 0
+          //extrae el numero y lo resta con 60min
+          if(match[0].match(/\d+/g) != null)
+              minutes_ago = (60 - parseInt(match[0].match(/\d+/g)[0], 10))
+          else
+              minutes_ago = (60 - 1)
+          
+          
+          
+          this.setState(state => {
+            // const filter = state.data.filter(e => {
+            //   return parseInt(e.name, 10) == minutes_ago
+            // })
+            const data = state.data.map((item, j) => {
+              
+              if (parseInt(item.name, 10) == minutes_ago) 
+              {
+                console.log("======================")
+                console.log("minutes:" + minutes_ago)
+                item.disponibles += element.available_bikes
+                item.ocupadas += element.busy_bikes
+                console.log("======================")
+                return item
+              } 
+              else 
+              {
+                return item;
+              }
+            });
+      
+            return {
+              data
+            };
+          });
+
+
+
+          // for(let i = 0; i <= this.state.data.length; i++)
+          // {
+          //   if(this.state.data[i].name == minutes_ago)
+          //   {
+
+              
+
+          //     // let temp = this.state.data[i]
+          //     // this.setState({data: })
+          //     // let tmp = [...this.state.data];
+          //     // tmp[i]['name'] = res.data.length
+          //     // this.setState({contributors: tmp})
+
+          //     // this.state.data.forEach(element => {
+              
+          //     // });
+          //   }
+          // }
+          
+
+          // let found = this.state.data.find(e=>{
+          //   return parseInt(e.name, 10) == minutes_ago
+          // })
+
+          // if(found != null)
+          // {
+          //   console.log(found)
+          //   found.disponibles += element.available_bikes
+          //   found.usadas += element.busy_bikes
+          // }
+      }
+    }
+
+    componentDidMount()
+    {
+      this.props.graphs.forEach(element => {
+
+        this.buildChart(element)
+
+        // let logs = station.expand.filter((e)=>{
+          
+        //   return e.date > date && e.date < Date.now()
+        // })
+
+        //recorre el historial
+        // station.expand.forEach(element => {
+
+          
+
+        //   //verifica si contiene la frase: hace x minutos
+        //   let match = moment(element.date).fromNow().match(/hace (\d+|un) (minutos|minuto)/g)
+  
+        //   //en el caso de que realice el match entra a este if
+        //   if(match != null && match.length > 0)
+        //   {
+        //       let minutes_ago = 0
+        //       //extrae el numero y lo resta con 60min
+        //       if(match[0].match(/\d+/g) != null)
+        //           minutes_ago = (60 - parseInt(match[0].match(/\d+/g)[0], 10))
+        //       else
+        //           minutes_ago = (60 - 1)
+              
+        //       console.log("estoy aca")
+        //       // for(let i = 1; i <= 60; i++)
+        //       // {
+        //       //   if(typeof data[i] !== 'undefined')
+        //       //   {
+        //       //     console.log(data[i].name)
+        //       //     debugger
+        //       //     if(parseInt(data[i].name ,10) == minutes_ago)
+        //       //     {
+        //       //       data[i].name = data[i].name
+        //       //       data[i].disponibles += element.available_bikes
+        //       //       data[i].usadas += element.busy_bikes
+        //       //     }
+        //       //   }
+        //       // }
+        //   }
+        // })
+      })
     }
 }

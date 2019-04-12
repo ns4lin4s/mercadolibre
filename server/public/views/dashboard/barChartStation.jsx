@@ -30,8 +30,8 @@ export default class BarChartStation extends React.Component {
                     <Tooltip />
                     <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
                     <ReferenceLine y={0} stroke="#000" />
-                    <Brush startIndex={46} dataKey="name" height={30} stroke="#8884d8" />
-                    <Bar dataKey="usadas" fill="#8884d8" />
+                    <Brush startIndex={50} dataKey="name" height={30} stroke="#8884d8" />
+                    <Bar dataKey="ocupadas" fill="#8884d8" />
                     <Bar dataKey="disponibles" fill="#82ca9d" />
                 </BarChart>
             </div>

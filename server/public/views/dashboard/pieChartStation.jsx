@@ -13,7 +13,7 @@ export default class PieChartStation extends React.Component {
 
         const data = [
             { name: 'disponibles (' +  numeral(this.props.totalLibres).format('0,0')+ ')', value: this.props.totalLibres },
-            { name: 'usadas (' +  numeral(this.props.totalUsadas).format('0,0')+ ')', value: this.props.totalUsadas }
+            { name: 'ocupadas (' +  numeral(this.props.totalUsadas).format('0,0')+ ')', value: this.props.totalUsadas }
         ];
           
           const COLORS = ['#82ca9d', '#8884d8'];
@@ -36,7 +36,7 @@ export default class PieChartStation extends React.Component {
         return (
             <div className="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Bicicletas usadas vs disponibles - Total: {numeral(this.props.totalLibres + this.props.totalUsadas).format('0,0')}</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Bicicletas ocupadas vs disponibles - Total: {numeral(this.props.totalLibres + this.props.totalUsadas).format('0,0')}</h6>
                 </div>
                 <div className="card-body">
                 <PieChart width={400} height={400}>

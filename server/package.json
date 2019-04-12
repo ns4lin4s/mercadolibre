@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "load": "node ./data_ini/load.js",
-    "start": "webpack --production && NODE_ENV=dev node index.js",
+    "start": "webpack --development && NODE_ENV=dev node index.js",
     "prod": "webpack --production && node ./data_ini/load.js && NODE_ENV=prod node index.js",
     "dev": "webpack -w & nodemon index.js"
   },

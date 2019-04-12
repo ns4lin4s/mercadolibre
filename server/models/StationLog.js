@@ -30,7 +30,11 @@ const StationLogSchema = new Schema({
     date: {
         type: Date,
         required: true
-    }
+    },
+    date_formatted: {
+        type: String,
+        required: true
+    },
 });
 
 module.exports =  mongoose.model('StationLog', StationLogSchema);
