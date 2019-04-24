@@ -24,16 +24,45 @@ export default class Dashboard extends React.Component {
             stations: [],
             totalUsadas: 0,
             totalLibres: 0,
+            geoJSON : {
+              type : "FeatureCollection",
+              crs: {
+                type : "name",
+                properties: {
+                  name : "urn:ogc:def:crs:OGC:1.3:CRS84"
+                }
+              },
+              features: [],
+            },
+            
             data: []
          }
 
         //this.mapStation(props.stations,props.stations_history)
-        console.log(props.stations_history)
+        // console.log(props.stations_history)
         
         props.stations_history.forEach(element => {
           this.state.optionsFilter.push({label: element.name, value: element.id })
           this.state.totalLibres += element.totalLibres
           this.state.totalUsadas += element.totalUsadas
+
+          this.state.geoJSON.features.push(
+            { 
+              type : "Feature",
+              properties: {
+                id : element.id,
+                mag : element.disponibles,
+                time : new Date(),
+                felt : null,
+                tsunami : 0,
+              },
+              geometry:{ 
+                type : "Point",
+                coordinates: new Array( parseFloat(element.longitude),parseFloat(element.latitude))
+              }
+            }
+          )
+
         });
 
         this.state.stations = props.stations_history 
@@ -201,7 +230,7 @@ export default class Dashboard extends React.Component {
               </ul>
             </nav>
             <div className="container-fluid">
-            <div className="row">
+            {/* <div className="row">
             <div className="col-xl-1 col-lg-1">
                 </div>
                 <div className="col-xl-10 col-lg-120">
@@ -211,14 +240,33 @@ export default class Dashboard extends React.Component {
               </div>
               <div className="col-xl-1 col-lg-1">
                 </div>
-              </div>
-              <div className="row">
+              </div> */}
+              {/* <div className="row">
                 <div className="col-xl-1 col-lg-1">
                 </div>
                 <div className="col-xl-10 col-lg-120">
                   <div className="card shadow mb-4">
                     <div className="card-body" >
-                        <div style={{width:500 + 'px'}}>
+                        
+                    </div>
+                  </div>  
+                </div>
+                <div className="col-xl-1 col-lg-1">
+                </div>
+              </div>
+                     */}
+              <div className="row">
+                
+                <div className="col-xl-8 col-lg-8">
+                  
+                  <Map data={this.state.geoJSON}></Map>
+                  
+
+                </div>
+                {/* <div className="col-xl-1 col-lg-1">
+                </div> */}
+                <div className="col-xl-4 col-lg-4">
+                <div style={{width:500 + 'px'}}>
                           <Select
                             placeholder="Filtrar por estación"
                             value={ this.state.selectedOption}
@@ -226,39 +274,33 @@ export default class Dashboard extends React.Component {
                             options={this.state.optionsFilter}
                             />
                         </div>
-                    </div>
-                  </div>  
-                </div>
-                <div className="col-xl-1 col-lg-1">
-                </div>
-              </div>
-                    
-              <div className="row">
-                
-                <div className="col-xl-6 col-lg-6">
-                  
-                  <Map></Map>
-                  
-                </div>
-                <div className="col-xl-1 col-lg-1">
-                </div>
-                <div className="col-xl-5 col-lg-5">
                   <StationTable 
                       stations={this.state.stations} 
                       totalLibres={this.state.totalLibres} 
                       totalUsadas={this.state.totalUsadas}>
                     </StationTable>
-                    <LineChartStation data={this.state.data}></LineChartStation>
-
-                <BarChartStation data={this.state.data} ></BarChartStation>
-
-                <PieChartStation totalLibres={this.state.totalLibres} totalUsadas={this.state.totalUsadas}></PieChartStation>
+                    
+                
 
                 </div>
                 {/* <div className="col-xl-1 col-lg-1">
                 </div> */}
               </div>
+                
+              <div className="row">
+                
+                <div className="col-xl-8 col-lg-8">
 
+                  <LineChartStation data={this.state.data}></LineChartStation>
+
+                  <BarChartStation data={this.state.data} ></BarChartStation>
+
+                  <PieChartStation totalLibres={this.state.totalLibres} totalUsadas={this.state.totalUsadas}></PieChartStation>
+
+                </div>
+                <div className="col-xl-4 col-lg-4"></div>
+
+              </div>
 
             </div>
           </div>

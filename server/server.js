@@ -90,6 +90,9 @@ app.get('/', (req, res) => {
           {
               _id: "$id",
               name: { "$first": "$name"},
+              latitude: { "$first": "$latitude"},
+              longitude: { "$first": "$longitude"},
+              available: { "$first": "$available_bikes"},
               available_bikes: {$sum: "$available_bikes"},
               busy_bikes: {$sum: "$busy_bikes"},
               expand: {$push: { id:"$id",name:"$name", date: "$date",busy_bikes:"$busy_bikes",available_bikes: "$available_bikes" } }
@@ -99,7 +102,10 @@ app.get('/', (req, res) => {
       { 
           "$project": {
               id: "$_id",
+              latitude: "$latitude",
+              longitude: "$longitude",
               name: "$name",
+              disponibles: "$available",
               totalLibres: "$available_bikes",
               totalUsadas: "$busy_bikes",
               expand : { 

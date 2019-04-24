@@ -18,7 +18,7 @@ export default class LineChartStation extends React.Component {
                 </div>
             <div className="card-body">
             <LineChart
-                width={500}
+                width={750}
                 height={300}
                 data={this.props.data}
                 margin={{
