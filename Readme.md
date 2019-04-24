@@ -1,3 +1,7 @@
+## Arquitectura
+
+![arquitectura](https://github.com/ns4lin4s/bike-trail/blob/master/screenshot/arquitectura.png)
+
 
 ## ¿De qué se compone la app?
 * [express - 4.x](https://github.com/strongloop/express) server side
