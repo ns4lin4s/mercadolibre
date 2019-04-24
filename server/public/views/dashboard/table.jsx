@@ -39,10 +39,12 @@ export default class StationTable extends React.Component {
   
       expandComponent(row) {
         
-  
+        
         let arr = row.expand.map((obj,i) => {
-          return { date:  moment(obj.date).fromNow() , id: obj.id, available_bikes: obj.available_bikes, busy_bikes: obj.busy_bikes}
+          return { date:  moment(obj.date).fromNow(), id: obj.id, available_bikes: obj.available_bikes, busy_bikes: obj.busy_bikes}
         })
+
+        console.log(arr)
   
         let options = {
                 hideSizePerPage: true,

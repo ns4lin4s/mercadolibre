@@ -13,6 +13,9 @@ module.exports = (props) => {
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.7.0/css/all.css" crossorigin="anonymous"></link>
         <link rel='stylesheet' href='/styles.css'></link>
         <link rel="stylesheet" href="https://npmcdn.com/react-bootstrap-table/dist/react-bootstrap-table-all.min.css"></link>
+        <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
+        <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css' rel='stylesheet' />
+        
       </head>
       <body id="page-top">
 

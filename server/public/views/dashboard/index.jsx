@@ -5,6 +5,7 @@ import StationTable from './table'
 import LineChartStation from './lineChartStation'
 import BarChartStation from './barChartStation'
 import PieChartStation from './pieChartStation'
+import Map from './mapComponent'
 import Select from 'react-select';
 import moment from 'moment';
 
@@ -26,13 +27,16 @@ export default class Dashboard extends React.Component {
             data: []
          }
 
-        this.state.stations = this.mapStation(props.stations,props.stations_history)
-
-        this.state.stations.forEach(element => {
+        //this.mapStation(props.stations,props.stations_history)
+        console.log(props.stations_history)
+        
+        props.stations_history.forEach(element => {
           this.state.optionsFilter.push({label: element.name, value: element.id })
           this.state.totalLibres += element.totalLibres
           this.state.totalUsadas += element.totalUsadas
         });
+
+        this.state.stations = props.stations_history 
 
         this.buildChart = this.buildChart.bind(this)
 
@@ -46,10 +50,7 @@ export default class Dashboard extends React.Component {
           data.push({ name: i.toString(), disponibles: 0, ocupadas: 0 })
         }
 
-        this.state.data = data
-        console.log(this.state.data )
-
-        
+        this.state.data = data        
     }
 
     loadGraph(){
@@ -80,8 +81,6 @@ export default class Dashboard extends React.Component {
                   {
                     if(typeof data[i] !== 'undefined')
                     {
-                      console.log(data[i].name)
-                      debugger
                       if(parseInt(data[i].name ,10) == minutes_ago)
                       {
                         data[i].name = data[i].name
@@ -91,8 +90,6 @@ export default class Dashboard extends React.Component {
                     }
                   }
               }
-                  
-              //console.log(moment(element.date).fromNow())
           });
         })
 
@@ -100,7 +97,7 @@ export default class Dashboard extends React.Component {
 
       }) 
       
-      promise.then((data)=>{console.log(data); }) 
+      promise.then((data)=>{  }) 
     
     }
 
@@ -137,15 +134,13 @@ export default class Dashboard extends React.Component {
       })
       .then(response => response.json())
       .then(output => {
-          console.log(output)
+          
           this.setState({ selectedOption });
-
-          let arr = this.mapStation(output.stations,output.stations_history)
           
           let totalLibres = 0
           let totalUsadas = 0
 
-          arr.forEach(element => {
+          output.stations_history.forEach(element => {
             totalLibres += element.totalLibres
             totalUsadas += element.totalUsadas
           });
@@ -158,14 +153,11 @@ export default class Dashboard extends React.Component {
             data.push({ name: i.toString(), disponibles: 0, ocupadas: 0 })
           }
 
-          this.setState({stations:arr, totalLibres, totalUsadas,data},()=>{
+          this.setState({stations:output.stations_history, totalLibres, totalUsadas,data},()=>{
             output.graphs.forEach((e)=>{
               self.buildChart(e)
             })
           })
-
-          
-
       })     
     }
 
@@ -219,7 +211,7 @@ export default class Dashboard extends React.Component {
               </div>
               <div className="col-xl-1 col-lg-1">
                 </div>
-                </div>
+              </div>
               <div className="row">
                 <div className="col-xl-1 col-lg-1">
                 </div>
@@ -242,27 +234,32 @@ export default class Dashboard extends React.Component {
               </div>
                     
               <div className="row">
-                <div className="col-xl-1 col-lg-1">
-                </div>
-                <div className="col-xl-5 col-lg-5">
-                  <LineChartStation data={this.state.data}></LineChartStation>
-
-                  <BarChartStation data={this.state.data} ></BarChartStation>
-
-                  <PieChartStation totalLibres={this.state.totalLibres} totalUsadas={this.state.totalUsadas}></PieChartStation>
+                
+                <div className="col-xl-6 col-lg-6">
+                  
+                  <Map></Map>
                   
                 </div>
-
+                <div className="col-xl-1 col-lg-1">
+                </div>
                 <div className="col-xl-5 col-lg-5">
                   <StationTable 
                       stations={this.state.stations} 
                       totalLibres={this.state.totalLibres} 
                       totalUsadas={this.state.totalUsadas}>
                     </StationTable>
+                    <LineChartStation data={this.state.data}></LineChartStation>
+
+                <BarChartStation data={this.state.data} ></BarChartStation>
+
+                <PieChartStation totalLibres={this.state.totalLibres} totalUsadas={this.state.totalUsadas}></PieChartStation>
+
                 </div>
-                <div className="col-xl-1 col-lg-1">
-                </div>
+                {/* <div className="col-xl-1 col-lg-1">
+                </div> */}
               </div>
+
+
             </div>
           </div>
           <Footer></Footer>
@@ -287,21 +284,16 @@ export default class Dashboard extends React.Component {
           else
               minutes_ago = (60 - 1)
           
-          
-          
           this.setState(state => {
-            // const filter = state.data.filter(e => {
-            //   return parseInt(e.name, 10) == minutes_ago
-            // })
+            
             const data = state.data.map((item, j) => {
               
               if (parseInt(item.name, 10) == minutes_ago) 
               {
-                console.log("======================")
-                console.log("minutes:" + minutes_ago)
+                
                 item.disponibles += element.available_bikes
                 item.ocupadas += element.busy_bikes
-                console.log("======================")
+                
                 return item
               } 
               else 
@@ -314,39 +306,6 @@ export default class Dashboard extends React.Component {
               data
             };
           });
-
-
-
-          // for(let i = 0; i <= this.state.data.length; i++)
-          // {
-          //   if(this.state.data[i].name == minutes_ago)
-          //   {
-
-              
-
-          //     // let temp = this.state.data[i]
-          //     // this.setState({data: })
-          //     // let tmp = [...this.state.data];
-          //     // tmp[i]['name'] = res.data.length
-          //     // this.setState({contributors: tmp})
-
-          //     // this.state.data.forEach(element => {
-              
-          //     // });
-          //   }
-          // }
-          
-
-          // let found = this.state.data.find(e=>{
-          //   return parseInt(e.name, 10) == minutes_ago
-          // })
-
-          // if(found != null)
-          // {
-          //   console.log(found)
-          //   found.disponibles += element.available_bikes
-          //   found.usadas += element.busy_bikes
-          // }
       }
     }
 
@@ -356,46 +315,6 @@ export default class Dashboard extends React.Component {
 
         this.buildChart(element)
 
-        // let logs = station.expand.filter((e)=>{
-          
-        //   return e.date > date && e.date < Date.now()
-        // })
-
-        //recorre el historial
-        // station.expand.forEach(element => {
-
-          
-
-        //   //verifica si contiene la frase: hace x minutos
-        //   let match = moment(element.date).fromNow().match(/hace (\d+|un) (minutos|minuto)/g)
-  
-        //   //en el caso de que realice el match entra a este if
-        //   if(match != null && match.length > 0)
-        //   {
-        //       let minutes_ago = 0
-        //       //extrae el numero y lo resta con 60min
-        //       if(match[0].match(/\d+/g) != null)
-        //           minutes_ago = (60 - parseInt(match[0].match(/\d+/g)[0], 10))
-        //       else
-        //           minutes_ago = (60 - 1)
-              
-        //       console.log("estoy aca")
-        //       // for(let i = 1; i <= 60; i++)
-        //       // {
-        //       //   if(typeof data[i] !== 'undefined')
-        //       //   {
-        //       //     console.log(data[i].name)
-        //       //     debugger
-        //       //     if(parseInt(data[i].name ,10) == minutes_ago)
-        //       //     {
-        //       //       data[i].name = data[i].name
-        //       //       data[i].disponibles += element.available_bikes
-        //       //       data[i].usadas += element.busy_bikes
-        //       //     }
-        //       //   }
-        //       // }
-        //   }
-        // })
       })
     }
 }

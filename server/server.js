@@ -10,6 +10,8 @@ import ReactEngine from 'react-engine';
 import routes from './public/routes.jsx';
 import mongoose from 'mongoose'
 import moment from 'moment'
+
+moment.locale('es')
 var request = require('request');
 
 let app = express();
@@ -78,10 +80,41 @@ app.get('/*.js', (req, res) => {
 
 app.get('/', (req, res) => {
   
+
+  let summary = StationLog
+  .aggregate(
+  [
+      { "$sort" : { date : -1, name: -1 } },
+      {
+          "$group":
+          {
+              _id: "$id",
+              name: { "$first": "$name"},
+              available_bikes: {$sum: "$available_bikes"},
+              busy_bikes: {$sum: "$busy_bikes"},
+              expand: {$push: { id:"$id",name:"$name", date: "$date",busy_bikes:"$busy_bikes",available_bikes: "$available_bikes" } }
+          },
+      },
+      
+      { 
+          "$project": {
+              id: "$_id",
+              name: "$name",
+              totalLibres: "$available_bikes",
+              totalUsadas: "$busy_bikes",
+              expand : { 
+                "$slice": [ "$expand", 20 ]
+              }
+                  
+          }
+      }
+  ])
+
   Promise.all(
     [
       Station.find(),
-      StationLog.find().sort({date: 'desc', name: 'asc'}),
+      summary,
+      //StationLog.find().sort({date: 'desc', name: 'asc'}),
       StationLog.find({
         date: {
           $lt: new Date(), 
@@ -90,16 +123,47 @@ app.get('/', (req, res) => {
       })
     ]
   ).then((output) => {
+    
     res.render(req.url, { stations: output[0], stations_history: output[1], graphs: output[2] } );
   }) 
 });
 
 app.get('/station/:id',(req, res) => {
   
+  let summary = StationLog
+  .aggregate(
+  [
+      { "$match" : {  id : req.params.id } },
+      { "$sort" : { date : -1, name: -1 } },
+      {
+          "$group":
+          {
+              _id: "$id",
+              name: { "$first": "$name"},
+              available_bikes: {$sum: "$available_bikes"},
+              busy_bikes: {$sum: "$busy_bikes"},
+              expand: {$push: { id:"$id",name:"$name", date: "$date",busy_bikes:"$busy_bikes",available_bikes: "$available_bikes" } }
+          },
+      },
+      
+      { 
+          "$project": {
+              id: "$_id",
+              name: "$name",
+              totalLibres: "$available_bikes",
+              totalUsadas: "$busy_bikes",
+              expand : { 
+                "$slice": [ "$expand", 20 ]
+              }
+                  
+          }
+      }
+  ])
+
   Promise.all(
     [
       Station.find({ id : req.params.id }),
-      StationLog.find({ id : req.params.id }).sort({date: 'desc', name: 'asc'}),
+      summary,
       StationLog.find({
         id : req.params.id,
         date: {
@@ -109,7 +173,7 @@ app.get('/station/:id',(req, res) => {
       })
     ]
   ).then((output) => {
-
+    
     res.json({ stations: output[0], stations_history: output[1], graphs: output[2] });
 
   })
@@ -132,26 +196,28 @@ app.get('/cron',(req,res)=>{
         longitude: element.longitude,
         //date_formated: moment(element.timestamp).fromNow(),
         date: element.timestamp,
-        date_formatted: moment(element.timestamp).format('YYYY-MM-DD HH:mm')
+        date_formatted: moment(element.timestamp).format('YYYY-MM-DD HH:mm') //element.id + '-' + element.free_bikes + '-' + element.empty_slots + '-' + moment(element.timestamp).format('YYYY-MM-DD HH:mm')
       });
       
-      StationLog.find({ 
-        date_formatted : element.date_formatted, 
-        available_bikes: element.free_bikes, 
-        busy_bikes: element.busy_bikes  
-      }).then((exist)=>{
-        console.log(exist)
-        if(exist != null && exist.length > 0) 
-        {
-          console.log("Se encuentra en nuestra base de datos.")
-        }
-        else
-        {
-          stationLog.save().then(item => { 
-            //console.log(item)
-          });
-        }
-      }).catch(reason=>{console.log(reason)})
+      // StationLog.find({ 
+      //   date_formatted : element.date_formatted, 
+      //   available_bikes: element.free_bikes, 
+      //   busy_bikes: element.busy_bikes  
+      // }).then((exist)=>{
+      //   console.log(exist)
+      //   if(exist != null && exist.length > 0) 
+      //   {
+      //     console.log("Se encuentra en nuestra base de datos.")
+      //   }
+      //   else
+      //   {
+          stationLog.save().then(value => { 
+            //console.log()
+          }).catch(e => {
+            console.log(e)
+          })
+      //   }
+      // }).catch(reason=>{console.log(reason)})
 
       // stationLog.save().then(item => { 
       //   console.log(item)
