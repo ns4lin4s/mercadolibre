@@ -180,31 +180,7 @@ export default class Dashboard extends React.Component {
               </ul>
             </nav>
             <div className="container-fluid">
-            {/* <div className="row">
-            <div className="col-xl-1 col-lg-1">
-                </div>
-                <div className="col-xl-10 col-lg-120">
-              <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                  <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-              </div>
-              </div>
-              <div className="col-xl-1 col-lg-1">
-                </div>
-              </div> */}
-              {/* <div className="row">
-                <div className="col-xl-1 col-lg-1">
-                </div>
-                <div className="col-xl-10 col-lg-120">
-                  <div className="card shadow mb-4">
-                    <div className="card-body" >
-                        
-                    </div>
-                  </div>  
-                </div>
-                <div className="col-xl-1 col-lg-1">
-                </div>
-              </div>
-                     */}
+            
               <div className="row">
                 
                 <div className="col-xl-8 col-lg-8">
@@ -213,8 +189,7 @@ export default class Dashboard extends React.Component {
                   
 
                 </div>
-                {/* <div className="col-xl-1 col-lg-1">
-                </div> */}
+                
                 <div className="col-xl-4 col-lg-4">
                 <div style={{width:500 + 'px'}}>
                           <Select
@@ -236,8 +211,6 @@ export default class Dashboard extends React.Component {
                 
 
                 </div>
-                {/* <div className="col-xl-1 col-lg-1">
-                </div> */}
               </div>
                 
               <div className="row">
@@ -266,8 +239,6 @@ export default class Dashboard extends React.Component {
 
     buildChart(element)
     {
-      console.log("buildchart")
-      console.log(moment(element.date).fromNow())
       //verifica si contiene la frase: hace x minutos
       let match = moment(element.date).fromNow().match(/hace (\d+|un) (minutos|minuto)/g)
   

@@ -92,16 +92,9 @@ export default class Map extends React.Component {
                     type: "symbol",
                     source: "earthquakes",
                     filter: ["has", "point_count"],
-                    // "layout": {
-                    //     "text-field": ["number-format", ["get", "mag"], {"min-fraction-digits": 0, "max-fraction-digits": 0}],
-                    //     "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-                    //     "text-size": 12
-                    // },
-                    // "paint": {
-                    //     "text-color": ["case", ["<", ["get", "mag"], 10], "black", "white"]
-                    // }
+                    
                     layout: {
-                        //"text-field": ["number-format", ["get", "mag"], {"min-fraction-digits": 0, "max-fraction-digits": 0}],
+                        
                     "text-field": "+",
                     "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
                     "text-size": 12
@@ -142,19 +135,6 @@ export default class Map extends React.Component {
                     }
                 });
                      
-                // self.state.map.addLayer({
-                //     id: "unclustered-point",
-                //     type: "circle",
-                //     source: "earthquakes",
-                //     filter: ["!", ["has", "point_count"]],
-                //     paint: {
-                //         "circle-color": "#11b4da",
-                //         "circle-radius": 8,
-                //         "circle-stroke-width": 2,
-                //         "circle-stroke-color": "#fff"
-                //     }
-                // });
-
                 // inspect a cluster on click
                 self.state.map.on('click', 'clusters', function (e) {
                     var features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
@@ -181,32 +161,16 @@ export default class Map extends React.Component {
             
 
         }) 
-        
-
-        //map.addControl(new mapboxgl.NavigationControl());
-        
-        // filters for classifying earthquakes into five categories based on magnitude
-        
-        // let setupScript = document.createElement('script');
-        // setupScript.type = 'text/javascript';
-        // setupScript.async = true;
-        // setupScript.innerHTML = ``
-
     }
 
     render() 
     {
         return (
-        // <div className="card shadow mb-4">
-        //     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        //         <h6 class="m-0 font-weight-bold text-primary">Estaciones</h6>
-        //     </div>
-        //     <div className="card-body">
-                <div >
-                    <div id="map" />
-                </div>
-        //     </div>
-        //   </div>
+        
+            <div >
+                <div id="map" />
+            </div>
+        
         );
     }
 
