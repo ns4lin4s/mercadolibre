@@ -43,8 +43,6 @@ export default class StationTable extends React.Component {
         let arr = row.expand.map((obj,i) => {
           return { date:  moment(obj.date).fromNow(), id: obj.id, available_bikes: obj.available_bikes, busy_bikes: obj.busy_bikes}
         })
-
-        console.log(arr)
   
         let options = {
                 hideSizePerPage: true,
@@ -113,9 +111,10 @@ export default class StationTable extends React.Component {
 
           return (
           
-            <div className="card shadow mb-4" style={{"display":"none"}}>
+            // <div className="card shadow mb-4" style={{"display":"none"}}>
+            <div className="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Estaciones</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Detalle de estaciones:</h6>
                 </div>
                 <div className="card-body">
                 <div className="table-responsive">

@@ -16,7 +16,9 @@ export default class Dashboard extends React.Component {
     constructor(props)
     {
         super(props)
-        
+        console.log("Index.jsx")
+        console.log(props)
+
         moment.locale('es')
 
         this.state = {
@@ -172,7 +174,7 @@ export default class Dashboard extends React.Component {
                 </li>
                 <div className="topbar-divider d-none d-sm-block"></div>
                 <li className="nav-item dropdown no-arrow">
-                  <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <a target="_blank" className="nav-link dropdown-toggle" href="https://www.linkedin.com/in/nelson-osvaldo-salinas/" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span className="mr-2 d-none d-lg-inline text-gray-600 small">Nelson Salinas</span>
                     <img className="img-profile rounded-circle" src="https://media.licdn.com/dms/image/C4E03AQHdzqhc2W7bpw/profile-displayphoto-shrink_200_200/0?e=1560384000&v=beta&t=JbLwuGeVX60UWJ3Fbe54OsqhagIWV5mV1RoOy71ljjQ" />
                   </a>
@@ -181,7 +183,7 @@ export default class Dashboard extends React.Component {
             </nav>
             <div className="container-fluid">
             
-              <div className="row">
+              <div className="row" style={{"height":800}}>
                 
                 <div className="col-xl-8 col-lg-8">
                   
@@ -191,16 +193,24 @@ export default class Dashboard extends React.Component {
                 </div>
                 
                 <div className="col-xl-4 col-lg-4">
-                <div style={{width:500 + 'px'}}>
-                          <Select
-                            placeholder="Filtrar por estación"
-                            value={ this.state.selectedOption}
-                            onChange={this.handleChange}
-                            options={this.state.optionsFilter}
-                            />
-                        </div>
+                  <div className="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Filtrar por estaciones:</h6>
+                    </div>
+                    <div className="card-body">
 
-                  <Filter></Filter>
+                        
+                            <Select
+                              placeholder="Filtrar por estación"
+                              value={ this.state.selectedOption}
+                              onChange={this.handleChange}
+                              options={this.state.optionsFilter}
+                              />
+                          
+                    </div>
+                  </div>
+
+                  {/* <Filter></Filter> */}
 
                   <StationTable 
                       stations={this.state.stations} 
