@@ -2,6 +2,7 @@ import React from 'react';
 import Menu from '../components/menu'
 import Footer from '../components/footer'
 import StationTable from './table'
+import Filter from './filter'
 import LineChartStation from './lineChartStation'
 import BarChartStation from './barChartStation'
 import PieChartStation from './pieChartStation'
@@ -37,9 +38,6 @@ export default class Dashboard extends React.Component {
             
             data: []
          }
-
-        //this.mapStation(props.stations,props.stations_history)
-        // console.log(props.stations_history)
         
         props.stations_history.forEach(element => {
           this.state.optionsFilter.push({label: element.name, value: element.id })
@@ -80,54 +78,6 @@ export default class Dashboard extends React.Component {
         }
 
         this.state.data = data        
-    }
-
-    loadGraph(){
-      
-      
-
-      //recorre las estaciones
-      let promise = new Promise((resolve,reject)=> {
-
-        this.state.stations.forEach(station => {
-          //recorre el historial
-          station.expand.forEach(element => {
-              
-              //verifica si contiene la frase: hace x minutos
-              let match = moment(element.date).fromNow().match(/hace (\d+|un) (minutos|minuto)/g)
-  
-              //en el caso de que realice el match entra a este if
-              if(match != null && match.length > 0)
-              {
-                  let minutes_ago = 0
-                  //extrae el numero y lo resta con 60min
-                  if(match[0].match(/\d+/g) != null)
-                      minutes_ago = (60 - parseInt(match[0].match(/\d+/g)[0], 10))
-                  else
-                      minutes_ago = (60 - 1)
-                  
-                  for(let i = 1; i <= 60; i++)
-                  {
-                    if(typeof data[i] !== 'undefined')
-                    {
-                      if(parseInt(data[i].name ,10) == minutes_ago)
-                      {
-                        data[i].name = data[i].name
-                        data[i].disponibles += element.available_bikes
-                        data[i].ocupadas += element.busy_bikes
-                      }
-                    }
-                  }
-              }
-          });
-        })
-
-        return resolve(data)
-
-      }) 
-      
-      promise.then((data)=>{  }) 
-    
     }
 
     mapStation(stations, history){
@@ -274,6 +224,9 @@ export default class Dashboard extends React.Component {
                             options={this.state.optionsFilter}
                             />
                         </div>
+
+                  <Filter></Filter>
+
                   <StationTable 
                       stations={this.state.stations} 
                       totalLibres={this.state.totalLibres} 
@@ -313,6 +266,8 @@ export default class Dashboard extends React.Component {
 
     buildChart(element)
     {
+      console.log("buildchart")
+      console.log(moment(element.date).fromNow())
       //verifica si contiene la frase: hace x minutos
       let match = moment(element.date).fromNow().match(/hace (\d+|un) (minutos|minuto)/g)
   
