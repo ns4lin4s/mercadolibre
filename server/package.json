@@ -1,33 +1,24 @@
 {
-  "name": "react-engine-example-app",
+  "name": "mercadolibre",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "load": "node ./data_ini/load.js",
-    "test": "node ./tests/test.js",
-    "start": "webpack --development && NODE_ENV=dev node index.js",
-    "prod": "webpack --production && node ./data_ini/load.js && NODE_ENV=prod node index.js",
-    "dev": "webpack -w & nodemon index.js"
+    "dev": "npm run sass:build & webpack -w & nodemon index.js",
+    "sass:build": "sass --watch ./src/styles.scss:./public/css/output.css --style compressed"
   },
   "author": "Nelson Salinas G.",
   "dependencies": {
     "express": "^4.13.3",
     "griddle-react": "^1.0.0",
     "json-loader": "^0.5.4",
-    "mapbox": "^1.0.0-beta10",
-    "mapbox-gl": "^0.53.1",
-    "moment": "^2.24.0",
-    "mongoose": "^5.4.21",
     "numeral": "^2.0.6",
-    "react": "^16.2.0",
-    "react-bootstrap-table": "^4.3.1",
-    "react-dom": "^16.2.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-engine": "^4.5.0",
     "react-loadable": "^5.5.0",
     "react-redux": "^6.0.1",
     "react-router": "^3.2.0",
     "react-select": "^2.4.2",
-    "recharts": "^1.5.0",
     "redux": "^4.0.1",
     "request": "^2.88.0",
     "serve-favicon": "^2.3.0"
@@ -46,10 +37,11 @@
     "babel-plugin-dynamic-import-node": "^2.2.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "css-loader": "^1.0.0",
+    "nodemon": "^1.9.2",
     "react-loadable": "^5.5.0",
+    "sass": "^1.22.7",
     "style-loader": "^0.22.1",
     "webpack": "^4.28.3",
-    "webpack-cli": "^3.1.2",
-    "nodemon": "^1.9.2"
+    "webpack-cli": "^3.1.2"
   }
 }
